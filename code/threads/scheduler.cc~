@@ -101,23 +101,22 @@ Scheduler::ReadyToRun (Thread *thread) // DONE
     
     
     //<TODO>
-    int Level = 0;
-
     if(thread->getPriority() >= 100) {
-    
+   
     	L1ReadyQueue->Insert(thread);
-   	Level = 1;
+	DEBUG(dbgMLFQ, "[InsertToQueue] Tick ["<< stats->totalTicks << "]: Thread [" 
+	<< thread->getID() <<"] is inserted into queue L1");
     }
     else if(thread->getPriority() >= 50){
     	L2ReadyQueue->Insert(thread);
-    	Level = 2;	
+	DEBUG(dbgMLFQ, "[InsertToQueue] Tick ["<< stats->totalTicks << "]: Thread [" 
+	<< thread->getID() <<"] is inserted into queue L2");	
     }
     else if(thread->getPriority() >= 0 && thread->getPriority() < 50){
     	L3ReadyQueue->Append(thread);
-    	Level = 3;
+	DEBUG(dbgMLFQ, "[InsertToQueue] Tick ["<< stats->totalTicks << "]: Thread [" 
+	<< thread->getID() <<"] is inserted into queue L3");
     }	
-    DEBUG(dbgMLFQ, "[InsertToQueue] Tick ["<< stats->totalTicks << "]: Thread [" 
-    << thread->getID() <<"] is inserted into queue L" << Level);
     // According to priority of Thread, put them into corresponding ReadyQueue.
     // After inserting Thread into ReadyQueue, don't forget to reset some values.
     // Hint: L1 ReadyQueue is preemptive SRTN(Shortest Remaining Time Next).
@@ -360,12 +359,6 @@ Scheduler::UpdatePriority() // change
 	    
         }
     }
-    if (!L1ReadyQueue->IsEmpty()) {
-        if ((kernel->currentThread->getRemainingBurstTime() > L1ReadyQueue->Front()->getRemainingBurstTime()) 
-        && kernel->currentThread->getPriority() >= 100 && L1ReadyQueue->Front()->getPriority() >= 100) {
-            kernel->interrupt->YieldOnReturn();
-        }
-   }
 }
 
 // <TODO>

@@ -101,23 +101,22 @@ Scheduler::ReadyToRun (Thread *thread) // DONE
     
     
     //<TODO>
-    int Level = 0;
-
     if(thread->getPriority() >= 100) {
-    
+   
     	L1ReadyQueue->Insert(thread);
-   	Level = 1;
+	DEBUG('z', "[InsertToQueue] Tick ["<< stats->totalTicks << "]: Thread [" 
+	<< thread->getID() <<"] is inserted into queue L1");
     }
     else if(thread->getPriority() >= 50){
     	L2ReadyQueue->Insert(thread);
-    	Level = 2;	
+	DEBUG('z', "[InsertToQueue] Tick ["<< stats->totalTicks << "]: Thread [" 
+	<< thread->getID() <<"] is inserted into queue L2");	
     }
     else if(thread->getPriority() >= 0 && thread->getPriority() < 50){
     	L3ReadyQueue->Append(thread);
-    	Level = 3;
+	DEBUG('z', "[InsertToQueue] Tick ["<< stats->totalTicks << "]: Thread [" 
+	<< thread->getID() <<"] is inserted into queue L3");
     }	
-    DEBUG(dbgMLFQ, "[InsertToQueue] Tick ["<< stats->totalTicks << "]: Thread [" 
-    << thread->getID() <<"] is inserted into queue L" << Level);
     // According to priority of Thread, put them into corresponding ReadyQueue.
     // After inserting Thread into ReadyQueue, don't forget to reset some values.
     // Hint: L1 ReadyQueue is preemptive SRTN(Shortest Remaining Time Next).
@@ -152,19 +151,19 @@ Scheduler::FindNextToRun ()
     
     if(!L1ReadyQueue->IsEmpty()) {
     	t = L1ReadyQueue->RemoveFront();
-    	DEBUG(dbgMLFQ, "[RemoveFromQueue] Tick [" << stats->totalTicks << "]: Thread [" 
+    	DEBUG('z', "[RemoveFromQueue] Tick [" << stats->totalTicks << "]: Thread [" 
     	<< t->getID() << "] is removed from queue L1");
     	return t;
     }
     else if(!L2ReadyQueue->IsEmpty()) {
     	t = L2ReadyQueue->RemoveFront();
-    	DEBUG(dbgMLFQ, "[RemoveFromQueue] Tick [" << stats->totalTicks << "]: Thread [" 
+    	DEBUG('z', "[RemoveFromQueue] Tick [" << stats->totalTicks << "]: Thread [" 
     	<< t->getID() << "] is removed from queue L2");
     	return t;
     }
     else if(!L3ReadyQueue->IsEmpty()) {
     	t = L3ReadyQueue->RemoveFront();
-    	DEBUG(dbgMLFQ, "[RemoveFromQueue] Tick [" << stats->totalTicks << "]: Thread [" 
+    	DEBUG('z', "[RemoveFromQueue] Tick [" << stats->totalTicks << "]: Thread [" 
     	<< t->getID() << "] is removed from queue L3");
     	return t;
     }
@@ -310,7 +309,7 @@ Scheduler::UpdatePriority() // change
             if(t->getPriority() >= 140) Priority = 149;
      	    else Priority = t->getPriority() + 10;
      	    
-            DEBUG(dbgMLFQ, "[UpdatePriority] Tick [" << kernel->stats->totalTicks
+            DEBUG('z', "[UpdatePriority] Tick [" << kernel->stats->totalTicks
                 << "] : Thread [" << t->getID() << "] changes its priority from [" << t->getPriority() 
                 << "] to [" << Priority << "]");
             t->setPriority(Priority);
@@ -325,13 +324,13 @@ Scheduler::UpdatePriority() // change
         //cout << t->getWaitTime() << endl;
         if (t->getWaitTime() > 400) {
      	    Priority = t->getPriority() + 10;
-            DEBUG(dbgMLFQ, "[UpdatePriority] Tick [" << kernel->stats->totalTicks 
+            DEBUG('z', "[UpdatePriority] Tick [" << kernel->stats->totalTicks 
            	<< "] : Thread [" << t->getID() << "] changes its priority from [" << t->getPriority() 
                 << "] to [" << Priority << "]");
             t->setPriority(Priority);
             t->setWaitTime(0);
             L2ReadyQueue->Remove(t);
-	    DEBUG(dbgMLFQ, "[RemoveFromQueue] Tick " << "[" 
+	    DEBUG('z', "[RemoveFromQueue] Tick " << "[" 
 		<< kernel->stats->totalTicks 
 	    	<< "]" << ": Thread " << "[" << t->getID() << "]" 
 	    	<< " is removed from queue L2");
@@ -346,13 +345,13 @@ Scheduler::UpdatePriority() // change
         //cout << t->getWaitTime() << endl;
         if (t->getWaitTime() > 400) {
      	    Priority = t->getPriority() + 10;
-            DEBUG(dbgMLFQ, "[UpdatePriority] Tick [" << kernel->stats->totalTicks 
+            DEBUG('z', "[UpdatePriority] Tick [" << kernel->stats->totalTicks 
            	<< "] : Thread [" << t->getID() << "] changes its priority from [" << t->getPriority() 
                 << "] to [" << Priority << "]");
             t->setPriority(Priority);
             t->setWaitTime(0);
             L3ReadyQueue->Remove(t);
-	    DEBUG(dbgMLFQ, "[RemoveFromQueue] Tick " << "[" 
+	    DEBUG('z', "[RemoveFromQueue] Tick " << "[" 
 		<< kernel->stats->totalTicks 
 	    	<< "]" << ": Thread " << "[" << t->getID() << "]" 
 	    	<< " is removed from queue L3");
