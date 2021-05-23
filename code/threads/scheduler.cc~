@@ -102,7 +102,7 @@ Scheduler::ReadyToRun (Thread *thread) // DONE
     
     //<TODO>
     int Level = 0;
-    cout << thread->getPriority() << endl;
+
     if(thread->getPriority() >= 100) {
     
     	L1ReadyQueue->Insert(thread);

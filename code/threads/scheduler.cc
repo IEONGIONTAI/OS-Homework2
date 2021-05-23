@@ -360,12 +360,6 @@ Scheduler::UpdatePriority() // change
 	    
         }
     }
-    if (!L1ReadyQueue->IsEmpty()) {
-        if ((kernel->currentThread->getRemainingBurstTime() > L1ReadyQueue->Front()->getRemainingBurstTime()) 
-        && kernel->currentThread->getPriority() >= 100 && L1ReadyQueue->Front()->getPriority() >= 100) {
-            kernel->interrupt->YieldOnReturn();
-        }
-   }
 }
 
 // <TODO>
