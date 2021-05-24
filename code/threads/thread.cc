@@ -268,20 +268,19 @@ Thread::Sleep (bool finishing)
 
     //<TODO>
     if (nextThread != this) {
-        Statistics* stats = kernel->stats;
-        DEBUG('z', "[ContexSwitch] Tick [" << stats->totalTicks << "]: Thread [" << nextThread->getID() 
+        DEBUG('z', "[ContexSwitch] Tick [" << kernel->stats->totalTicks << "]: Thread [" << nextThread->getID() 
         << "] is now selected for execution, thread ["<< this->getID() << "] is replaced, and it has executed [" 
         << this->getRunTime() << "] ticks");
         if (this->getRunTime() != 0) {
             int update = this->getRemainingBurstTime() - this->getRunTime();
-            DEBUG('z', "[UpdateRemainingBurstTime] Tick [" << stats->totalTicks << "]: Thread [" << this->getID() 
+            DEBUG('z', "[UpdateRemainingBurstTime] Tick [" << kernel->stats->totalTicks << "]: Thread [" << this->getID() 
             << "] update remaining burst time, from:[" << this->getRemainingBurstTime() << "] - [" 
             << this->getRunTime() << "], to [" << update << "]");
             // 1. Update RemainingBurstTime
+            // 2. Reset some value of current_thread, then context switch
             this->setRemainingBurstTime(update);
             this->setRunTime(0);
         }
-        // 2. Reset some value of current_thread, then context switch
         nextThread->setWaitTime(0);
         nextThread->setRRTime(0);
         kernel->scheduler->Run(nextThread, finishing);
