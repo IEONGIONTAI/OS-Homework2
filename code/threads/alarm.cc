@@ -64,7 +64,7 @@ Alarm::CallBack()
     kernel->currentThread->setRRTime(kernel->currentThread->getRRTime() + 100);
     // 3. Check Round Robin
     if (kernel->currentThread->getPriority() < 50) {
-        if (kernel->currentThread->getRRTime() % 200) {
+        if ((kernel->currentThread->getRRTime() % 200) == 0) {
             interrupt->YieldOnReturn();
         }
     }
