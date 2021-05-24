@@ -314,6 +314,12 @@ Scheduler::UpdatePriority() // change
                 << "] to [" << Priority << "]");
             t->setPriority(Priority);
             t->setWaitTime(0);
+            L1ReadyQueue->Remove(t);
+	    DEBUG('z', "[RemoveFromQueue] Tick " << "[" 
+		<< kernel->stats->totalTicks 
+	    	<< "]" << ": Thread " << "[" << t->getID() << "]" 
+	    	<< " is removed from queue L1");
+	    ReadyToRun(t);
             
         }
     }
